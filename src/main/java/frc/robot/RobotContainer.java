@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+
+import static frc.robot.Constants.ControllerConstants.*;
 import frc.robot.colorwheel.ColorWheelCore;
 import frc.robot.colorwheel.ColorWheelSubsystem;
 import frc.robot.util.controller.ControllerSet;
@@ -25,7 +27,8 @@ import frc.robot.util.controller.LogitechController;
  */
 public class RobotContainer {
 
-    private final ControllerSet controllerSet = new ControllerSet(new LogitechController(0), new LogitechController(1));
+    private final ControllerSet controllerSet = new ControllerSet(new LogitechController(CONTROLLER_ID_ALPHA),
+            new LogitechController(CONTROLLER_ID_BRAVO));
 
     private final ColorWheelSubsystem colorWheel = new ColorWheelSubsystem(new ColorWheelCore());
 

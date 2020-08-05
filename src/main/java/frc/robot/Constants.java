@@ -19,7 +19,11 @@ package frc.robot;
  */
 public final class Constants {
 
-    public static final int CONTROLLER_ID = 0;
+    public static final class ControllerConstants {
+
+        public static final int CONTROLLER_ID_ALPHA = 0;
+        public static final int CONTROLLER_ID_BRAVO = 0;
+    }
 
     public static final class ColorWheelConstants {
 
