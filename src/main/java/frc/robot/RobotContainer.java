@@ -10,6 +10,11 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.colorwheel.ColorWheelCore;
+import frc.robot.colorwheel.ColorWheelSubsystem;
+import frc.robot.util.controller.ControllerSet;
+import frc.robot.util.controller.LogitechController;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -19,6 +24,10 @@ import edu.wpi.first.wpilibj2.command.Command;
  * commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+
+    private final ControllerSet controllerSet = new ControllerSet(new LogitechController(0), new LogitechController(1));
+
+    private final ColorWheelSubsystem colorWheel = new ColorWheelSubsystem(new ColorWheelCore());
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -35,6 +44,8 @@ public class RobotContainer {
      * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
+        controllerSet.useButton(LogitechController.A, LogitechController.B)
+                .whenHeld(new InstantCommand(colorWheel::toggle, colorWheel));
     }
 
     /**
