@@ -9,12 +9,12 @@ import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Counter.Mode;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 
 import com.revrobotics.ColorSensorV3;
 import com.revrobotics.ColorMatch;
 
 import frc.robot.util.pid.PID;
+import frc.robot.util.ShuffleTabs;
 import static frc.robot.Constants.ColorWheelConstants.*;
 
 public class ColorWheelCore extends SubsystemBase {
@@ -34,9 +34,8 @@ public class ColorWheelCore extends SubsystemBase {
         colorMatcher.addColorMatch(blueTarget);
         colorMatcher.addColorMatch(yellowTarget);
 
-        var tab = Shuffleboard.getTab("Debug");
-        tab.addNumber("Encoder Value (Pre Ratio)", liftEncoder::getPeriod);
-        tab.addNumber("Encoder Value (With Ratio)", this::getCurrentPosition);
+        ShuffleTabs.PROGRAMER.addNumber("Encoder Value (Pre Ratio)", liftEncoder::getPeriod);
+        ShuffleTabs.PROGRAMER.addNumber("Encoder Value (With Ratio)", this::getCurrentPosition);
     }
 
     public double getCurrentPosition() {

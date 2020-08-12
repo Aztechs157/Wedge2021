@@ -1,9 +1,9 @@
 package frc.robot.colorwheel;
 
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ColorWheelConstants.ArmLimits;
 import frc.robot.Constants.ColorWheelConstants.ArmTargets;
+import frc.robot.util.ShuffleTabs;
 
 public class ColorWheelSubsystem extends SubsystemBase {
 
@@ -16,12 +16,10 @@ public class ColorWheelSubsystem extends SubsystemBase {
         this.colorWheel = colorWheel;
         this.currentState = new CurrentlyDown();
 
-        final var tab = Shuffleboard.getTab("Driver");
-        tab.addString("Color Sensed", () -> colorWheel.getColor().name());
-        tab.addString("Color Required", () -> colorWheel.getRequiredColor().name());
+        ShuffleTabs.DRIVER.addString("Color Sensed", () -> colorWheel.getColor().name());
+        ShuffleTabs.DRIVER.addString("Color Required", () -> colorWheel.getRequiredColor().name());
 
-        final var debugTab = Shuffleboard.getTab("Debug");
-        debugTab.addString("Current State", () -> this.currentState.getClass().getSimpleName());
+        ShuffleTabs.PROGRAMER.addString("Current State", () -> this.currentState.getClass().getSimpleName());
     }
 
     private interface ArmState {
