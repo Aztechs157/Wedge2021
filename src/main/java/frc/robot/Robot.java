@@ -7,7 +7,9 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Watchdog;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -30,10 +32,12 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
         // Instantiate our RobotContainer. This will perform all our button bindings,
-        // and put our
-        // autonomous chooser on the dashboard.
+        // and put our autonomous chooser on the dashboard.
         robotContainer = new RobotContainer();
     }
+
+    private final Watchdog watchdog = new Watchdog(kDefaultPeriod,
+            () -> DriverStation.reportError("Loop time of " + kDefaultPeriod + "s overrun\n", true));
 
     /**
      * This function is called every robot packet, no matter the mode. Use this for
@@ -53,7 +57,17 @@ public class Robot extends TimedRobot {
         // and running subsystem periodic() methods. This must be called from the
         // robot's periodic
         // block in order for anything in the Command-based framework to work.
+        watchdog.reset();
+        watchdog.addEpoch("robotPeriodic() custom");
+
         CommandScheduler.getInstance().run();
+
+        watchdog.disable();
+
+        // Warn on loop time overruns
+        if (watchdog.isExpired()) {
+            watchdog.printEpochs();
+        }
     }
 
     /**
