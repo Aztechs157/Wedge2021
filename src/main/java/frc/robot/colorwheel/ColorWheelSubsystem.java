@@ -19,7 +19,9 @@ public class ColorWheelSubsystem extends SubsystemBase {
         ShuffleTabs.DRIVER.addString("Color Sensed", () -> colorWheel.getColor().name());
         ShuffleTabs.DRIVER.addString("Color Required", () -> colorWheel.getRequiredColor().name());
 
-        ShuffleTabs.PROGRAMER.addString("Current State", () -> this.currentState.getClass().getSimpleName());
+        ShuffleTabs.onDebugInit(() -> {
+            ShuffleTabs.PROGRAMER.addString("Current State", () -> this.currentState.getClass().getSimpleName());
+        });
     }
 
     private interface ArmState {

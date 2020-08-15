@@ -27,27 +27,41 @@ public class ShuffleTabs {
     private static final NetworkTableEntry debugModeEntry = ShuffleTabs.ROBOT_CONFIG.add("Debug Mode", false)
             .withWidget(BuiltInWidgets.kToggleSwitch).getEntry();
 
-    private static final ArrayList<Runnable> debugCallbackList = new ArrayList<>();
-
-    public static void ifDebug(final Runnable func) {
-        debugCallbackList.add(func);
+    /**
+     * @return If we are in debug mode or not
+     */
+    public static boolean isDebugMode() {
+        // If debug switch is on and not connected to a field
+        return debugModeEntry.getBoolean(false) && (!DriverStation.getInstance().isFMSAttached());
     }
 
-    private static boolean shouldCheckForTrue = false;
+    private static final ArrayList<Runnable> debugInitCallbacks = new ArrayList<>();
+
+    /**
+     * Register a callback for the first time debug mode is switched on
+     *
+     * @param callback The callback to register
+     */
+    public static void onDebugInit(final Runnable callback) {
+        debugInitCallbacks.add(callback);
+    }
+
+    private static boolean hasInitedAlready = false;
 
     public static void check() {
-        var currentStatus = debugModeEntry.getBoolean(false) || DriverStation.getInstance().isFMSAttached();
-
-        // Run code on the first true, and ignore any trues after it
-        if (shouldCheckForTrue && currentStatus) {
-            for (var func : debugCallbackList) {
-                func.run();
-            }
-            shouldCheckForTrue = false;
+        // Don't init more then once
+        if (hasInitedAlready) {
+            return;
         }
-        // If we hit a single false, start looking for trues again
-        else if (!currentStatus) {
-            shouldCheckForTrue = true;
+
+        // Check conditions
+        hasInitedAlready = isDebugMode();
+
+        // Run callbacks if check passed
+        if (hasInitedAlready) {
+            for (var callback : debugInitCallbacks) {
+                callback.run();
+            }
         }
     }
 }

@@ -34,7 +34,7 @@ public class ColorWheelCore extends SubsystemBase {
         colorMatcher.addColorMatch(blueTarget);
         colorMatcher.addColorMatch(yellowTarget);
 
-        ShuffleTabs.ifDebug(() -> {
+        ShuffleTabs.onDebugInit(() -> {
             ShuffleTabs.PROGRAMER.addNumber("Encoder Value (Pre Ratio)", liftEncoder::getPeriod);
             ShuffleTabs.PROGRAMER.addNumber("Encoder Value (With Ratio)", this::getCurrentPosition);
         });
