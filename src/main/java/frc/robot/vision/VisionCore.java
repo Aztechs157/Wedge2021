@@ -14,9 +14,9 @@ import static frc.robot.Constants.VisionConstants.*;
  * Add your docs here.
  */
 public class VisionCore {
-    private final Pixy pixy = new Pixy(new I2C(I2C_PORT, PIXY_I2C_ADDRESS));
+    private final Pixy2 pixy = new Pixy2(new I2C(I2C_PORT, PIXY_I2C_ADDRESS));
 
-    public Pixy getPixy() {
+    public Pixy2 getPixy() {
         return pixy;
     }
 }
