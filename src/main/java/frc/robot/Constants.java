@@ -7,6 +7,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.I2C.Port;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
  * numerical or boolean constants. This class should not be used for any other
@@ -23,6 +25,12 @@ public final class Constants {
 
         public static final int CONTROLLER_ID_ALPHA = 0;
         public static final int CONTROLLER_ID_BRAVO = 0;
+    }
+
+    public static final class VisionConstants {
+
+        public static final Port I2C_PORT = Port.kOnboard;
+        public static final int PIXY_I2C_ADDRESS = 0x55;
     }
 
     public static final class ColorWheelConstants {

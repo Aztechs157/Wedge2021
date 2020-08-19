@@ -10,13 +10,14 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 import static frc.robot.Constants.ControllerConstants.*;
 import frc.robot.colorwheel.ColorWheelCore;
 import frc.robot.colorwheel.ColorWheelSubsystem;
 import frc.robot.util.controller.ControllerSet;
 import frc.robot.util.controller.LogitechController;
+import frc.robot.vision.VisionCore;
+import frc.robot.vision.VisionSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -31,6 +32,7 @@ public class RobotContainer {
             new LogitechController(CONTROLLER_ID_BRAVO));
 
     private final ColorWheelSubsystem colorWheel = new ColorWheelSubsystem(new ColorWheelCore());
+    private final VisionSubsystem vision = new VisionSubsystem(new VisionCore());
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -47,8 +49,8 @@ public class RobotContainer {
      * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
-        controllerSet.useButton(LogitechController.A, LogitechController.B)
-                .whenHeld(new InstantCommand(colorWheel::toggle, colorWheel));
+        controllerSet.useButton(LogitechController.A, LogitechController.B).whenPressed(colorWheel::toggle, colorWheel);
+        controllerSet.useButton(LogitechController.Y).whenPressed(vision::updateLED, vision);
     }
 
     /**
