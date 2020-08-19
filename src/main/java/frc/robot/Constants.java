@@ -45,5 +45,13 @@ public final class Constants {
             public static final int UP = 88;
             public static final int DOWN = 180;
         }
+
+    }
+
+    public static final class DriveConstants {
+        public static final int FrontLeft = 2;
+        public static final int FrontRight = 1;
+        public static final int BackLeft = 4;
+        public static final int BackRight = 3;
     }
 }
