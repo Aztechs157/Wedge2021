@@ -8,7 +8,6 @@
 package frc.robot.vision;
 
 import java.nio.ByteBuffer;
-import java.util.Arrays;
 import java.awt.Color;
 
 import edu.wpi.first.wpilibj.I2C;
@@ -23,19 +22,34 @@ public class Pixy2 {
         this.pixy = pixy;
     }
 
+    public enum RequestType {
+        SetLED(20);
+
+        public final byte opcode;
+
+        private RequestType(final int opcode) {
+            this.opcode = (byte) opcode;
+        }
+    }
+
+    public ByteBuffer createHeader(final RequestType type, final int length) {
+        var request = ByteBuffer.allocate(length);
+        request.putShort((short) 0xaec1); // Magic number
+        request.put((byte) type.opcode); // Request opcode
+        request.put((byte) length); // Length
+        return request;
+    }
+
     public void setLED(final Color color) {
-        var request = ByteBuffer.allocate(7);
-        request.putShort((short) 0xaec1); // Request header
-        request.put((byte) 20); // setLED opcode
-        request.put((byte) 3); // Length
+        var request = createHeader(RequestType.SetLED, 3);
         request.put((byte) color.getRed());
         request.put((byte) color.getGreen());
         request.put((byte) color.getBlue());
 
         pixy.writeBulk(request, request.capacity());
 
-        var responce = ByteBuffer.allocate(10);
+        var response = ByteBuffer.allocate(10);
 
-        pixy.readOnly(responce, 10);
+        pixy.readOnly(response, 10);
     }
 }
