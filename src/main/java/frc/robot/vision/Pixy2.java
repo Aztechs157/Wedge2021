@@ -32,8 +32,9 @@ public class Pixy2 {
         }
     }
 
-    public ByteBuffer createHeader(final RequestType type, final int length) {
-        var request = ByteBuffer.allocate(length);
+    public ByteBuffer createRequest(final RequestType type, final int length) {
+        final var HEADER_SIZE = 4;
+        final var request = ByteBuffer.allocate(HEADER_SIZE + length);
         request.putShort((short) 0xaec1); // Magic number
         request.put((byte) type.opcode); // Request opcode
         request.put((byte) length); // Length
@@ -41,14 +42,14 @@ public class Pixy2 {
     }
 
     public void setLED(final Color color) {
-        var request = createHeader(RequestType.SetLED, 3);
+        final var request = createRequest(RequestType.SetLED, 3);
         request.put((byte) color.getRed());
         request.put((byte) color.getGreen());
         request.put((byte) color.getBlue());
 
         pixy.writeBulk(request, request.capacity());
 
-        var response = ByteBuffer.allocate(10);
+        final var response = ByteBuffer.allocate(10);
 
         pixy.readOnly(response, 10);
     }
