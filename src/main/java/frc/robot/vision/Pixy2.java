@@ -45,13 +45,29 @@ public class Pixy2 {
         return request;
     }
 
+    public int unsign(final byte num) {
+        if (num < 0) {
+            return (1 << Byte.SIZE) - 1 + num;
+        } else {
+            return num;
+        }
+    }
+
+    public int unsign(final Short num) {
+        if (num < 0) {
+            return (1 << Short.SIZE) - 1 + num;
+        } else {
+            return num;
+        }
+    }
+
     private ByteBuffer fetchResponse(final RequestResponseType type) {
         final var HEADER_SIZE = 6;
         final var header = ByteBuffer.allocate(HEADER_SIZE);
         pixy.readOnly(header, HEADER_SIZE);
 
         final var sync = header.getShort();
-        if (sync != 0xafc1) {
+        if (unsign(sync) != 0xafc1) {
             tossError(new Error("Pixy2: Fetched response has an invalid sync."));
         }
 
