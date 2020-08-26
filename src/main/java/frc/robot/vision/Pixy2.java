@@ -13,6 +13,7 @@ import java.awt.Color;
 import edu.wpi.first.wpilibj.I2C;
 
 import static frc.robot.util.ShuffleTabs.tossError;
+import static frc.robot.util.NumberUtil.unsign;
 
 /**
  * Add your docs here.
@@ -43,22 +44,6 @@ public class Pixy2 {
         request.put((byte) type.requestOpcode); // Request opcode
         request.put((byte) length); // Length
         return request;
-    }
-
-    public int unsign(final byte num) {
-        if (num < 0) {
-            return (1 << Byte.SIZE) - 1 + num;
-        } else {
-            return num;
-        }
-    }
-
-    public int unsign(final Short num) {
-        if (num < 0) {
-            return (1 << Short.SIZE) - 1 + num;
-        } else {
-            return num;
-        }
     }
 
     private ByteBuffer fetchResponse(final RequestResponseType type) {
