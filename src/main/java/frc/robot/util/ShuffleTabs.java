@@ -35,6 +35,14 @@ public class ShuffleTabs {
         return debugModeEntry.getBoolean(false) && (!DriverStation.getInstance().isFMSAttached());
     }
 
+    public static void tossError(final Error error) {
+        if (isDebugMode()) {
+            throw error;
+        } else {
+            DriverStation.reportWarning(error.toString(), false);
+        }
+    }
+
     private static final ArrayList<Runnable> debugInitCallbacks = new ArrayList<>();
 
     /**
