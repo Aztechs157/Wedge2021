@@ -24,16 +24,13 @@ public class ColorWheelCore extends SubsystemBase {
     private final TalonSRX liftMotor = new TalonSRX(LIFT_MOTOR_ID);
     private final Counter liftEncoder = new Counter(Mode.kSemiperiod);
 
-    public ColorWheelCore() {
+    {
         liftEncoder.setSemiPeriodMode(true);
         liftEncoder.setUpSource(9);
         liftEncoder.reset();
+    }
 
-        colorMatcher.addColorMatch(redTarget);
-        colorMatcher.addColorMatch(greenTarget);
-        colorMatcher.addColorMatch(blueTarget);
-        colorMatcher.addColorMatch(yellowTarget);
-
+    public ColorWheelCore() {
         ShuffleTabs.onDebugInit(() -> {
             ShuffleTabs.PROGRAMER.addNumber("Encoder Value (Pre Ratio)", liftEncoder::getPeriod);
             ShuffleTabs.PROGRAMER.addNumber("Encoder Value (With Ratio)", this::getCurrentPosition);
@@ -61,6 +58,13 @@ public class ColorWheelCore extends SubsystemBase {
     private final Color greenTarget = ColorMatch.makeColor(0.197, 0.561, 0.240);
     private final Color blueTarget = ColorMatch.makeColor(0.143, 0.427, 0.429);
     private final Color yellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
+
+    {
+        colorMatcher.addColorMatch(redTarget);
+        colorMatcher.addColorMatch(greenTarget);
+        colorMatcher.addColorMatch(blueTarget);
+        colorMatcher.addColorMatch(yellowTarget);
+    }
 
     public enum ColorResult {
         Red, Green, Blue, Yellow, Unknown,

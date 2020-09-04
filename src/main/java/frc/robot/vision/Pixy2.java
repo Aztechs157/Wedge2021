@@ -20,6 +20,10 @@ import static frc.robot.util.NumberUtil.unsign;
  * Add your docs here.
  */
 public class Pixy2 {
+    private static final int REQUEST_HEADER_SIZE = 4;
+    private static final int RESPONSE_HEADER_SIZE = 6;
+    private static final int BYTES_PER_BLOCK = 14;
+
     private final I2C pixy;
 
     public Pixy2(final I2C pixy) {
@@ -41,8 +45,7 @@ public class Pixy2 {
 
     private ByteBuffer createRequest(final RequestResponseType type, final int length) {
         // Create a buffer for the header
-        final var HEADER_SIZE = 4;
-        final var request = ByteBuffer.allocate(HEADER_SIZE + length);
+        final var request = ByteBuffer.allocate(REQUEST_HEADER_SIZE + length);
         request.order(ByteOrder.LITTLE_ENDIAN);
 
         // Fill in the buffer
@@ -55,10 +58,9 @@ public class Pixy2 {
 
     private ByteBuffer readResponse(final RequestResponseType type) {
         // Read just the header of the response
-        final var HEADER_SIZE = 6;
-        final var header = ByteBuffer.allocate(HEADER_SIZE);
+        final var header = ByteBuffer.allocate(RESPONSE_HEADER_SIZE);
         header.order(ByteOrder.LITTLE_ENDIAN);
-        pixy.readOnly(header, HEADER_SIZE);
+        pixy.readOnly(header, RESPONSE_HEADER_SIZE);
 
         // Check the sync value
         {
@@ -68,7 +70,7 @@ public class Pixy2 {
             }
         }
 
-        // Check the recevied type
+        // Check the received type
         {
             final var receivedType = header.get();
             if (receivedType != type.responseOpcode) {
@@ -222,7 +224,6 @@ public class Pixy2 {
 
         final var response = sendThenReceive(request, RequestResponseType.GetBlocks);
 
-        final var BYTES_PER_BLOCK = 14;
         final var numberOfBlocks = response.remaining() / BYTES_PER_BLOCK;
         final var blocks = new Pixy2Block[numberOfBlocks];
 
