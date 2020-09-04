@@ -10,7 +10,6 @@ package frc.robot.vision;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.awt.Color;
-import java.net.Authenticator.RequestorType;
 
 import edu.wpi.first.wpilibj.I2C;
 
@@ -138,8 +137,8 @@ public class Pixy2 {
         public final int height;
 
         private Pixy2Resolution(final ByteBuffer response) {
-            this.width = response.getShort();
-            this.height = response.getShort();
+            this.width = unsign(response.getShort());
+            this.height = unsign(response.getShort());
         }
     }
 
@@ -192,5 +191,45 @@ public class Pixy2 {
         final var request = createRequest(RequestResponseType.GetFPS, 0);
         final var response = sendThenReceive(request, RequestResponseType.GetFPS);
         return unsign(response.getInt());
+    }
+
+    public class Pixy2Block {
+        final int colorCode;
+        final int centerXAxis;
+        final int centerYAxis;
+        final int width;
+        final int height;
+        final int angle;
+        final int trackingIndex;
+        final int age;
+
+        private Pixy2Block(final ByteBuffer response) {
+            this.colorCode = unsign(response.getShort());
+            this.centerXAxis = unsign(response.getShort());
+            this.centerYAxis = unsign(response.getShort());
+            this.width = unsign(response.getShort());
+            this.height = unsign(response.getShort());
+            this.angle = unsign(response.getShort());
+            this.trackingIndex = unsign(response.get());
+            this.age = unsign(response.get());
+        }
+    }
+
+    public Pixy2Block[] getBlocks(final byte signatureBitField, final byte maxReturnBlocks) {
+        final var request = createRequest(RequestResponseType.GetBlocks, 2);
+        request.put(signatureBitField);
+        request.put(maxReturnBlocks);
+
+        final var response = sendThenReceive(request, RequestResponseType.GetBlocks);
+
+        final var BYTES_PER_BLOCK = 14;
+        final var numberOfBlocks = response.remaining() / BYTES_PER_BLOCK;
+        final var blocks = new Pixy2Block[numberOfBlocks];
+
+        for (var currentBlock = 0; currentBlock < numberOfBlocks; currentBlock++) {
+            blocks[currentBlock] = new Pixy2Block(response);
+        }
+
+        return blocks;
     }
 }
