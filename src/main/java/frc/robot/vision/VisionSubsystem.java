@@ -40,8 +40,13 @@ public class VisionSubsystem extends SubsystemBase {
         vision.getPixy().setLED(colorChooser.getSelected());
     }
 
-    public void printFramerate() {
-        final var fps = vision.getPixy().getFPS();
-        System.out.println("FPS: " + fps);
+    public void printBlocks() {
+        final var blocks = vision.getPixy().getBlocks((byte) 1, (byte) 256);
+
+        for (var block : blocks) {
+            System.out.println("Block:");
+            System.out.println("\twidth:" + block.width);
+            System.out.println("\theight:" + block.height);
+        }
     }
 }
