@@ -41,12 +41,12 @@ public class VisionSubsystem extends SubsystemBase {
     }
 
     public void printBlocks() {
-        final var blocks = vision.getPixy().getBlocks((byte) 1, (byte) 256);
+        final var blocks = vision.getPixy().getBlocks((byte) 0b00000001, (byte) 255);
 
-        for (var block : blocks) {
+        for (final var block : blocks) {
             System.out.println("Block:");
-            System.out.println("\twidth:" + block.width);
-            System.out.println("\theight:" + block.height);
+            System.out.println("|  width:" + block.width);
+            System.out.println("|  height:" + block.height);
         }
     }
 }

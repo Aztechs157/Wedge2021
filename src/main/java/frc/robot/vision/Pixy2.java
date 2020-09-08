@@ -84,6 +84,12 @@ public class Pixy2 {
         // Read the rest of the response
         final var response = ByteBuffer.allocate(length);
         response.order(ByteOrder.LITTLE_ENDIAN);
+
+        // If no payload then don't bother reading/checksum-ing
+        if (length == 0) {
+            return response;
+        }
+
         pixy.readOnly(response, length);
 
         // Checksum
