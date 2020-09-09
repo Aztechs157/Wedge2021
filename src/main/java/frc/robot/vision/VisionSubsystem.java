@@ -9,6 +9,7 @@ package frc.robot.vision;
 
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import java.awt.Color;
@@ -43,6 +44,12 @@ public class VisionSubsystem extends SubsystemBase {
         ShuffleTabs.onDebugInit(() -> {
             ShuffleTabs.PROGRAMER.add("LED Color", colorChooser).withWidget(BuiltInWidgets.kSplitButtonChooser);
         });
+
+        setDefaultCommand(new InstantCommand(() -> {
+            final var blocks = vision.getPixy().getBlocks((byte) 0b00000001, (byte) 255);
+
+            renderFrame(blocks, 50);
+        }, this));
     }
 
     public void updateLED() {
@@ -57,13 +64,6 @@ public class VisionSubsystem extends SubsystemBase {
             System.out.println("|  width:" + block.width);
             System.out.println("|  height:" + block.height);
         }
-    }
-
-    @Override
-    public void periodic() {
-        final var blocks = vision.getPixy().getBlocks((byte) 0b00000001, (byte) 255);
-
-        renderFrame(blocks, 50);
     }
 
     private int frameCounter;
