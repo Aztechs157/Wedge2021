@@ -24,7 +24,7 @@ public class VisionCore {
 
     private CvSource videoSource;
 
-    public CvSource getCameraServer() {
+    public CvSource getVideoSource() {
         if (videoSource == null) {
             videoSource = CameraServer.getInstance().putVideo("Pixy", 315, 207);
         }
