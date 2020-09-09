@@ -7,6 +7,8 @@
 
 package frc.robot.vision;
 
+import edu.wpi.cscore.CvSource;
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.I2C;
 import static frc.robot.Constants.VisionConstants.*;
 
@@ -18,5 +20,14 @@ public class VisionCore {
 
     public Pixy2 getPixy() {
         return pixy;
+    }
+
+    private CvSource videoSource;
+
+    public CvSource getCameraServer() {
+        if (videoSource == null) {
+            videoSource = CameraServer.getInstance().putVideo("Pixy", 315, 207);
+        }
+        return videoSource;
     }
 }

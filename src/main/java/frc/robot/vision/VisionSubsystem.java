@@ -12,8 +12,17 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import java.awt.Color;
+import java.util.Arrays;
+
+import org.opencv.core.CvType;
+import org.opencv.core.Mat;
+import org.opencv.core.Point;
+import org.opencv.core.Scalar;
+import org.opencv.core.Size;
+import org.opencv.imgproc.Imgproc;
 
 import frc.robot.util.ShuffleTabs;
+import frc.robot.vision.Pixy2.Pixy2Block;
 
 public class VisionSubsystem extends SubsystemBase {
     private final VisionCore vision;
@@ -48,5 +57,36 @@ public class VisionSubsystem extends SubsystemBase {
             System.out.println("|  width:" + block.width);
             System.out.println("|  height:" + block.height);
         }
+    }
+
+    @Override
+    public void periodic() {
+        final var blocks = vision.getPixy().getBlocks((byte) 0b00000001, (byte) 255);
+
+        renderFrame(blocks, 50);
+    }
+
+    private int frameCounter;
+
+    public void renderFrame(final Pixy2Block[] blocks, final int cyclesPerFrame) {
+
+        if (frameCounter++ < cyclesPerFrame) {
+            return;
+        }
+
+        frameCounter = 0;
+        Arrays.sort(blocks);
+
+        var image = new Mat(new Size(315, 207), CvType.CV_8UC3);
+        image.setTo(new Scalar(255, 255, 255));
+
+        for (var block : blocks) {
+            var topLeft = new Point(block.centerXAxis - block.width / 2, block.centerYAxis - block.height / 2);
+            var bottomRight = new Point(block.centerXAxis + block.width / 2, block.centerYAxis + block.height / 2);
+
+            Imgproc.rectangle(image, topLeft, bottomRight, new Scalar(0, 0, 255));
+        }
+
+        vision.getCameraServer().putFrame(image);
     }
 }

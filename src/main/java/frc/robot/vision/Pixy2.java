@@ -201,7 +201,7 @@ public class Pixy2 {
         return unsign(response.getInt());
     }
 
-    public class Pixy2Block {
+    public class Pixy2Block implements Comparable<Pixy2Block> {
         final int colorCode;
         final int centerXAxis;
         final int centerYAxis;
@@ -220,6 +220,11 @@ public class Pixy2 {
             this.angle = unsign(response.getShort());
             this.trackingIndex = unsign(response.get());
             this.age = unsign(response.get());
+        }
+
+        @Override
+        public int compareTo(Pixy2Block other) {
+            return Integer.valueOf(this.width * this.height).compareTo(other.width * other.height);
         }
     }
 
