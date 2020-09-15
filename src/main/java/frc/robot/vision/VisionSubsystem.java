@@ -30,6 +30,12 @@ public class VisionSubsystem extends SubsystemBase {
 
     private final SendableChooser<Color> colorChooser = new SendableChooser<>();
 
+    private boolean enableFrames = false;
+
+    public void enableFrames() {
+        enableFrames = true;
+    }
+
     /**
      * Creates a new VisionSubsystem.
      */
@@ -46,6 +52,10 @@ public class VisionSubsystem extends SubsystemBase {
         });
 
         setDefaultCommand(new RunCommand(() -> {
+            if (!enableFrames) {
+                return;
+            }
+
             final var blocks = vision.getPixy().getBlocks((byte) 0b00000001, (byte) 255);
 
             renderFrame(blocks, 50);

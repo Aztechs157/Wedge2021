@@ -51,7 +51,7 @@ public class RobotContainer {
     private void configureButtonBindings() {
         controllerSet.useButton(LogitechController.A, LogitechController.B).whenPressed(colorWheel::toggle, colorWheel);
         controllerSet.useButton(LogitechController.Y).whenPressed(vision::updateLED, vision);
-        controllerSet.useButton(LogitechController.X).whenPressed(vision::printBlocks, vision);
+        controllerSet.useButton(LogitechController.X).whenPressed(vision::enableFrames, vision);
     }
 
     /**
