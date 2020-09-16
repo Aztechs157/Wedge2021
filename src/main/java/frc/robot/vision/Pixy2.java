@@ -80,8 +80,8 @@ public class Pixy2 {
         {
             final var receivedType = unsign(header.get());
             if (receivedType != type.responseOpcode) {
-                tossError(new Error("Pixy2: Fetched response type didn't match (expected: " + receivedType + ", got:"
-                        + type.responseOpcode + ")"));
+                tossError(new Error("Pixy2: Fetched response type didn't match (expected: " + type.responseOpcode
+                        + ", got:" + receivedType + ")"));
             }
         }
 
@@ -105,7 +105,7 @@ public class Pixy2 {
 
             // Checksum is defined as sum of all bytes of payload
             for (final var part : response.array()) {
-                sum += part;
+                sum += unsign(part);
                 sum %= MAX_UNSIGNED_SHORT;
             }
 
