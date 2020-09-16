@@ -21,7 +21,11 @@ import static frc.robot.util.NumberUtil.unsign;
  */
 public class Pixy2 {
     private static final int REQUEST_HEADER_SIZE = 4;
+    private static final int REQUEST_SYNC = 0xc1ae;
+
     private static final int RESPONSE_HEADER_SIZE = 6;
+    private static final int RESPONSE_SYNC = 0xc1af;
+
     private static final int BYTES_PER_BLOCK = 14;
 
     private final I2C pixy;
@@ -49,7 +53,7 @@ public class Pixy2 {
         request.order(ByteOrder.LITTLE_ENDIAN);
 
         // Fill in the buffer
-        request.putShort((short) 0xc1ae); // Magic number
+        request.putShort((short) REQUEST_SYNC); // Magic number
         request.put((byte) type.requestOpcode); // Request opcode
         request.put((byte) length); // Length
 
@@ -65,8 +69,9 @@ public class Pixy2 {
         // Check the sync value
         {
             final var sync = header.getShort();
-            if (unsign(sync) != 0xc1af) {
-                tossError(new Error("Pixy2: Fetched response has an invalid sync."));
+            if (unsign(sync) != RESPONSE_SYNC) {
+                tossError(new Error("Pixy2: Fetched response has an invalid sync (expected: " + RESPONSE_SYNC + ", got:"
+                        + sync + ")"));
             }
         }
 
@@ -74,7 +79,8 @@ public class Pixy2 {
         {
             final var receivedType = header.get();
             if (receivedType != type.responseOpcode) {
-                tossError(new Error("Pixy2: Fetched response has a type that didn't match what was expected."));
+                tossError(new Error("Pixy2: Fetched response type didn't match (expected: " + receivedType + ", got:"
+                        + type.responseOpcode + ")"));
             }
         }
 
@@ -82,7 +88,7 @@ public class Pixy2 {
         final var checksum = header.getShort();
 
         // Read the rest of the response
-        final var response = ByteBuffer.allocate(length);
+        final var response = ByteBuffer.allocate(unsign(length));
         response.order(ByteOrder.LITTLE_ENDIAN);
 
         // If no payload then don't bother reading/checksum-ing
@@ -102,7 +108,8 @@ public class Pixy2 {
             }
 
             if (unsign(checksum) != sum) {
-                tossError(new Error("Pixy2: Response checksum didn't match what was expected."));
+                tossError(new Error(
+                        "Pixy2: Response checksum didn't match (expected: " + checksum + ", got:" + sum + ")"));
             }
         }
 
