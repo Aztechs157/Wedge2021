@@ -68,8 +68,8 @@ public class Pixy2 {
 
         // Check the sync value
         {
-            final var sync = header.getShort();
-            if (unsign(sync) != RESPONSE_SYNC) {
+            final var sync = unsign(header.getShort());
+            if (sync != RESPONSE_SYNC) {
                 tossError(new Error("Pixy2: Fetched response has an invalid sync (expected: " + RESPONSE_SYNC + ", got:"
                         + sync + ")"));
             }
@@ -77,18 +77,18 @@ public class Pixy2 {
 
         // Check the received type
         {
-            final var receivedType = header.get();
+            final var receivedType = unsign(header.get());
             if (receivedType != type.responseOpcode) {
                 tossError(new Error("Pixy2: Fetched response type didn't match (expected: " + receivedType + ", got:"
                         + type.responseOpcode + ")"));
             }
         }
 
-        final var length = header.get();
-        final var checksum = header.getShort();
+        final var length = unsign(header.get());
+        final var checksum = unsign(header.getShort());
 
         // Read the rest of the response
-        final var response = ByteBuffer.allocate(unsign(length));
+        final var response = ByteBuffer.allocate(length);
         response.order(ByteOrder.LITTLE_ENDIAN);
 
         // If no payload then don't bother reading/checksum-ing
@@ -107,7 +107,7 @@ public class Pixy2 {
                 sum += part;
             }
 
-            if (unsign(checksum) != sum) {
+            if (checksum != sum) {
                 tossError(new Error(
                         "Pixy2: Response checksum didn't match (expected: " + checksum + ", got:" + sum + ")"));
             }
@@ -230,7 +230,7 @@ public class Pixy2 {
         }
 
         @Override
-        public int compareTo(Pixy2Block other) {
+        public int compareTo(final Pixy2Block other) {
             return Integer.valueOf(this.width * this.height).compareTo(other.width * other.height);
         }
     }

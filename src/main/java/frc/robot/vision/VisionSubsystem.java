@@ -87,13 +87,14 @@ public class VisionSubsystem extends SubsystemBase {
         frameCounter = 0;
         Arrays.sort(blocks);
 
-        var videoSource = vision.getVideoSource();
-        var image = new Mat(new Size(315, 207), CvType.CV_8UC3);
+        final var videoSource = vision.getVideoSource();
+        final var image = new Mat(new Size(315, 207), CvType.CV_8UC3);
         image.setTo(new Scalar(255, 255, 255));
 
-        for (var block : blocks) {
-            var topLeft = new Point(block.centerXAxis - block.width / 2, block.centerYAxis - block.height / 2);
-            var bottomRight = new Point(block.centerXAxis + block.width / 2, block.centerYAxis + block.height / 2);
+        for (final var block : blocks) {
+            final var topLeft = new Point(block.centerXAxis - block.width / 2, block.centerYAxis - block.height / 2);
+            final var bottomRight = new Point(block.centerXAxis + block.width / 2,
+                    block.centerYAxis + block.height / 2);
 
             Imgproc.rectangle(image, topLeft, bottomRight, new Scalar(0, 0, 255));
         }
