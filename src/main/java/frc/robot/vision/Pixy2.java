@@ -22,6 +22,7 @@ import static frc.robot.util.NumberUtil.unsign;
 public class Pixy2 {
     private static final int REQUEST_HEADER_SIZE = 4;
     private static final int REQUEST_SYNC = 0xc1ae;
+    private static final int MAX_UNSIGNED_SHORT = 0xffff;
 
     private static final int RESPONSE_HEADER_SIZE = 6;
     private static final int RESPONSE_SYNC = 0xc1af;
@@ -100,11 +101,12 @@ public class Pixy2 {
 
         // Checksum
         {
-            short sum = 0;
+            var sum = 0;
 
             // Checksum is defined as sum of all bytes of payload
             for (final var part : response.array()) {
                 sum += part;
+                sum %= MAX_UNSIGNED_SHORT;
             }
 
             if (checksum != sum) {
