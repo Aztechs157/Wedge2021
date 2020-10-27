@@ -10,6 +10,8 @@ package frc.robot.vision;
 import edu.wpi.cscore.CvSource;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.I2C;
+import frc.robot.vision.pixy2.Pixy2;
+
 import static frc.robot.Constants.VisionConstants.*;
 
 /**

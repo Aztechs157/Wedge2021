@@ -23,7 +23,7 @@ import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
 import frc.robot.util.ShuffleTabs;
-import frc.robot.vision.Pixy2.Pixy2Block;
+import frc.robot.vision.pixy2.Pixy2.Pixy2Block;
 
 public class VisionSubsystem extends SubsystemBase {
     private final VisionCore vision;
